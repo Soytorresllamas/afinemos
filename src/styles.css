@@ -149,36 +149,116 @@ button:focus-visible {
   text-shadow: 0 0 8px currentColor;
 }
 
-/* ── Burbuja de tono: carril neón ── */
+/* ── Círculo de tono: módulo central con estado ── */
 
-.burbuja-pista {
-  position: relative;
-  height: 16rem;
-  width: 6rem;
-  margin: 1.25rem auto;
-  border: 1px solid rgba(0, 255, 204, 0.35);
-  border-radius: 3rem;
-  overflow: hidden;
-  background: rgba(18, 18, 30, 0.6);
-  box-shadow: inset 0 0 14px rgba(0, 255, 204, 0.08);
-}
-
-.burbuja-linea {
-  position: absolute;
-  top: 50%;
-  left: 0;
-  right: 0;
-  border-top: 2px dashed rgba(0, 255, 204, 0.5);
-}
-
-.burbuja {
-  position: absolute;
-  left: 50%;
-  width: 3rem;
-  height: 3rem;
+.circulo {
+  width: 14rem;
+  height: 14rem;
+  margin: 1.5rem auto;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
-  transition: top 80ms linear;
+  border: 2px solid;
+  background: rgba(18, 18, 30, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.circulo-principal {
+  font-family: var(--fuente-titulo);
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1;
+  text-shadow: 0 0 12px currentColor;
+}
+
+.circulo-cents {
+  font-family: var(--fuente-dato);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.circulo-nota {
+  font-family: var(--fuente-dato);
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.circulo-etiqueta {
+  font-family: var(--fuente-dato);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--texto-suave);
+  margin-top: 0.3rem;
+}
+
+.circulo-latido {
+  animation: latido 2.4s ease-in-out infinite;
+}
+
+@keyframes latido {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+}
+
+/* ── Consejos ── */
+
+.consejo-contextual {
+  font-size: 0.95rem;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid rgba(255, 224, 74, 0.35);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  line-height: 1.5;
+}
+
+.consejos {
+  margin: 1.5rem 0 0.5rem;
+  text-align: left;
+  background: var(--superficie);
+  border: 1px solid rgba(0, 255, 204, 0.25);
+  border-radius: 1rem;
+  padding: 0.85rem 1.1rem;
+}
+
+.consejos summary {
+  font-family: var(--fuente-dato);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--cian);
+  cursor: pointer;
+}
+
+.consejos ul {
+  margin: 0.75rem 0 0.25rem;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.consejos li {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--texto-suave);
 }
 
 /* ── Datos y etiquetas ── */
@@ -314,8 +394,11 @@ button:focus-visible {
   section {
     animation: none;
   }
+  .circulo-latido {
+    animation: none;
+  }
   button,
-  .burbuja {
+  .circulo {
     transition: none;
   }
 }

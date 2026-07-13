@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { midiToNoteName } from '../music/notes';
 import { isValidRange, type VocalRange } from '../music/range';
 import { StableNoteDetector, type PitchReading } from '../music/stableNote';
+import { CirculoTono } from './CirculoTono';
 import { PantallaErrorMic } from './PantallaErrorMic';
 import { usePitchStream } from './usePitchStream';
 
@@ -92,5 +93,10 @@ export function AsistenteRango({ onComplete }: { onComplete(range: VocalRange): 
 
 function Escuchando({ reading }: { reading: PitchReading | null }) {
   const oyendo = reading !== null && reading.rms >= 0.01;
-  return <p aria-live="polite">{oyendo ? '🎶 Te escucho… sostén la nota' : '… esperando tu voz'}</p>;
+  return (
+    <>
+      <CirculoTono estado={oyendo ? 'escuchando' : 'esperando'} />
+      <p aria-live="polite">{oyendo ? '🎶 Te escucho… sostén la nota' : '… esperando tu voz'}</p>
+    </>
+  );
 }

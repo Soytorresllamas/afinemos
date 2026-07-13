@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { playNote } from '../audio/tones';
 import { centsOff, midiToNoteName, tuningStatus } from '../music/notes';
 import { randomTargetMidi, type VocalRange } from '../music/range';
-import { BurbujaTono } from './BurbujaTono';
+import { CirculoTono } from './CirculoTono';
+import { CONSEJOS_AGUDO, CONSEJOS_GENERALES, CONSEJOS_GRAVE } from './consejos';
 import { PantallaErrorMic } from './PantallaErrorMic';
 import { usePitchStream } from './usePitchStream';
 
@@ -51,12 +52,27 @@ export function Afinador({
         </p>
       ) : (
         <>
-          <BurbujaTono cents={cents} status={status} />
+          <CirculoTono
+            estado={status ?? 'esperando'}
+            cents={cents}
+            nota={valido ? midiToNoteName(reading.midi) : null}
+          />
           <p className="indicacion" aria-live="polite">
             {indicacion(cents)}
           </p>
+          {cents !== null && Math.abs(cents) > 25 && (
+            <Consejo cents={cents} target={target} />
+          )}
         </>
       )}
+      <details className="consejos">
+        <summary>Consejos para modular mejor</summary>
+        <ul>
+          {CONSEJOS_GENERALES.map((c) => (
+            <li key={c}>{c}</li>
+          ))}
+        </ul>
+      </details>
       <p>
         <button className="enlace" onClick={onResetRange}>
           Volver a medir mi rango
@@ -71,4 +87,11 @@ function indicacion(cents: number | null): string {
   if (cents < -25) return 'Sube un poco ↑ (estás grave)';
   if (cents > 25) return 'Baja un poco ↓ (estás agudo)';
   return '¡Afinado! 🎉';
+}
+
+/** Un consejo contextual estable por nota objetivo (no parpadea entre lecturas). */
+function Consejo({ cents, target }: { cents: number; target: number }) {
+  const lista = cents < 0 ? CONSEJOS_GRAVE : CONSEJOS_AGUDO;
+  const consejo = lista[target % lista.length];
+  return <p className="consejo-contextual">💡 {consejo}</p>;
 }
