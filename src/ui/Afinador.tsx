@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { preferredMicId, setPreferredMicId } from '../audio/mic';
-import { playNote } from '../audio/tones';
+import {
+  INSTRUMENTOS,
+  playNote,
+  preferredInstrument,
+  setPreferredInstrument,
+  type Instrumento,
+} from '../audio/tones';
 import { centsOff, midiToNoteName, tuningStatus } from '../music/notes';
 import { randomTargetMidi, type VocalRange } from '../music/range';
 import { CirculoTono } from './CirculoTono';
@@ -25,6 +31,7 @@ export function Afinador({
   const [target, setTarget] = useState(() => randomTargetMidi(range));
   const [activo, setActivo] = useState(false);
   const [micId, setMicId] = useState<string | null>(() => preferredMicId());
+  const [instrumento, setInstrumento] = useState<Instrumento>(() => preferredInstrument());
   const { reading, error } = usePitchStream(activo, micId);
 
   if (error) return <PantallaErrorMic code={error.code} />;
@@ -87,6 +94,24 @@ export function Afinador({
         </>
       )}
       <ReglaNotas range={range} targetMidis={[target]} />
+      <label className="selector-mic">
+        Sonido
+        <select
+          value={instrumento}
+          onChange={(e) => {
+            const i = e.target.value as Instrumento;
+            setPreferredInstrument(i);
+            setInstrumento(i);
+          }}
+        >
+          {(Object.keys(INSTRUMENTOS) as Instrumento[]).map((i) => (
+            <option key={i} value={i}>
+              {INSTRUMENTOS[i]}
+              {i === 'flauta' ? ' ⭐' : ''}
+            </option>
+          ))}
+        </select>
+      </label>
       <SelectorMic
         activo={activo}
         value={micId}
