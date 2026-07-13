@@ -9,7 +9,15 @@ import { usePitchStream } from './usePitchStream';
 const MIN_RMS = 0.01;
 const MIN_CLARITY = 0.85;
 
-export function Afinador({ range, onResetRange }: { range: VocalRange; onResetRange(): void }) {
+export function Afinador({
+  range,
+  onResetRange,
+  onEjercicios,
+}: {
+  range: VocalRange;
+  onResetRange(): void;
+  onEjercicios(): void;
+}) {
   const [target, setTarget] = useState(() => randomTargetMidi(range));
   const [activo, setActivo] = useState(false);
   const { reading, error } = usePitchStream(activo);
@@ -35,6 +43,7 @@ export function Afinador({ range, onResetRange }: { range: VocalRange; onResetRa
         >
           Otra nota
         </button>
+        <button onClick={onEjercicios}>Ejercicios 🎵</button>
       </div>
       {!activo ? (
         <p>

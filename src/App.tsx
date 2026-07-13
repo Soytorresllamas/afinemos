@@ -1,14 +1,23 @@
 import { useEffect, useState } from 'react';
+import type { ExerciseType } from './exercises/types';
 import type { VocalRange } from './music/range';
 import { clearVocalRange, loadVocalRange, saveVocalRange } from './progress/store';
 import { Afinador } from './ui/Afinador';
 import { AsistenteRango } from './ui/AsistenteRango';
+import { Ejercicio } from './ui/Ejercicio';
+import { Ejercicios } from './ui/Ejercicios';
+import { Historial } from './ui/Historial';
+
+type Vista = 'afinador' | 'menu-ejercicios' | 'historial' | { tipo: ExerciseType };
 
 export default function App() {
   const [range, setRange] = useState<VocalRange | null | 'cargando'>('cargando');
+  const [vista, setVista] = useState<Vista>('afinador');
 
   useEffect(() => {
-    void loadVocalRange().then(setRange).catch(() => setRange(null));
+    loadVocalRange()
+      .then(setRange)
+      .catch(() => setRange(null));
   }, []);
 
   if (range === 'cargando') return <p>Cargando…</p>;
@@ -23,6 +32,23 @@ export default function App() {
       />
     );
   }
+  if (typeof vista === 'object') {
+    return (
+      <Ejercicio type={vista.tipo} range={range} onSalir={() => setVista('menu-ejercicios')} />
+    );
+  }
+  if (vista === 'menu-ejercicios') {
+    return (
+      <Ejercicios
+        onElegir={(tipo) => setVista({ tipo })}
+        onHistorial={() => setVista('historial')}
+        onVolver={() => setVista('afinador')}
+      />
+    );
+  }
+  if (vista === 'historial') {
+    return <Historial onVolver={() => setVista('menu-ejercicios')} />;
+  }
   return (
     <Afinador
       range={range}
@@ -31,6 +57,7 @@ export default function App() {
           .then(() => setRange(null))
           .catch(() => setRange(null));
       }}
+      onEjercicios={() => setVista('menu-ejercicios')}
     />
   );
 }
