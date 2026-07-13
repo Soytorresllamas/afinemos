@@ -57,7 +57,7 @@ export function Ejercicio({
   const [resultado, setResultado] = useState<Resultado | null>(null);
   const lecturas = useRef<TimedReading[]>([]);
   const inicioCanto = useRef(0);
-  const { reading, error } = usePitchStream(fase === 'canta');
+  const { reading, error } = usePitchStream(fase === 'escucha' || fase === 'canta');
 
   // Acumular lecturas con tiempo mientras canta.
   useEffect(() => {
@@ -84,7 +84,7 @@ export function Ejercicio({
 
   // Fase canta: al terminar el tiempo, calificar y guardar.
   useEffect(() => {
-    if (fase !== 'canta') return;
+    if (fase !== 'canta' || error !== null) return;
     const t = window.setTimeout(() => {
       const res = calificar(ejercicio, lecturas.current);
       setResultado(res);
@@ -98,9 +98,20 @@ export function Ejercicio({
       }
     }, totalMsDe(ejercicio) + TRANSITION_MS);
     return () => window.clearTimeout(t);
-  }, [fase, ejercicio]);
+  }, [fase, ejercicio, error]);
 
-  if (error) return <PantallaErrorMic code={error.code} />;
+  if (error) {
+    return (
+      <section>
+        <PantallaErrorMic code={error.code} />
+        <p>
+          <button className="enlace" onClick={onSalir}>
+            Volver a ejercicios
+          </button>
+        </p>
+      </section>
+    );
+  }
 
   const notas =
     ejercicio.type === 'sirena'
