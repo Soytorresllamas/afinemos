@@ -1,4 +1,4 @@
-# Afinado — entrenador vocal personal (diseño)
+# Afinemos — entrenador vocal personal (diseño)
 
 Fecha: 2026-07-12
 Estado: aprobado por Marcelo
