@@ -35,22 +35,30 @@ export async function startMic(bufferSize = 2048): Promise<MicSession> {
   } catch (err) {
     throw toMicError(err);
   }
-  const ctx = new AudioContext();
-  await ctx.resume();
-  const source = ctx.createMediaStreamSource(stream);
-  const analyser = ctx.createAnalyser();
-  analyser.fftSize = bufferSize;
-  source.connect(analyser);
-  const buf = new Float32Array(bufferSize);
-  return {
-    sampleRate: ctx.sampleRate,
-    readBuffer() {
-      analyser.getFloatTimeDomainData(buf);
-      return buf;
-    },
-    stop() {
-      stream.getTracks().forEach((t) => t.stop());
-      void ctx.close();
-    },
-  };
+  let ctx: AudioContext | undefined;
+  try {
+    const audioCtx = new AudioContext();
+    ctx = audioCtx;
+    await audioCtx.resume();
+    const source = audioCtx.createMediaStreamSource(stream);
+    const analyser = audioCtx.createAnalyser();
+    analyser.fftSize = bufferSize;
+    source.connect(analyser);
+    const buf = new Float32Array(bufferSize);
+    return {
+      sampleRate: audioCtx.sampleRate,
+      readBuffer() {
+        analyser.getFloatTimeDomainData(buf);
+        return buf;
+      },
+      stop() {
+        stream.getTracks().forEach((t) => t.stop());
+        void audioCtx.close();
+      },
+    };
+  } catch (err) {
+    stream.getTracks().forEach((t) => t.stop());
+    if (ctx) void ctx.close();
+    throw toMicError(err);
+  }
 }

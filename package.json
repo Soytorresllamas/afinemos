@@ -1,11 +1,7 @@
 {
   "name": "afinemos",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "directories": {
-    "doc": "docs"
-  },
+  "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -13,9 +9,6 @@
     "test": "vitest run --passWithNoTests",
     "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "idb-keyval": "^6.3.0",
     "pitchy": "^4.1.0",

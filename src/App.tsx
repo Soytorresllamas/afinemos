@@ -8,7 +8,7 @@ export default function App() {
   const [range, setRange] = useState<VocalRange | null | 'cargando'>('cargando');
 
   useEffect(() => {
-    void loadVocalRange().then(setRange);
+    void loadVocalRange().then(setRange).catch(() => setRange(null));
   }, []);
 
   if (range === 'cargando') return <p>Cargando…</p>;
@@ -16,7 +16,9 @@ export default function App() {
     return (
       <AsistenteRango
         onComplete={(r) => {
-          void saveVocalRange(r).then(() => setRange(r));
+          void saveVocalRange(r)
+            .then(() => setRange(r))
+            .catch(() => setRange(r));
         }}
       />
     );
@@ -25,7 +27,9 @@ export default function App() {
     <Afinador
       range={range}
       onResetRange={() => {
-        void clearVocalRange().then(() => setRange(null));
+        void clearVocalRange()
+          .then(() => setRange(null))
+          .catch(() => setRange(null));
       }}
     />
   );
