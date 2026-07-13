@@ -1,9 +1,9 @@
 import type { TuningStatus } from '../music/notes';
 
 const COLORS: Record<TuningStatus, string> = {
-  afinado: '#3a9d5d',
-  cerca: '#d9a521',
-  lejos: '#c94f4f',
+  afinado: '#3dffa0',
+  cerca: '#ffe04a',
+  lejos: '#ff4d5e',
 };
 
 export function BurbujaTono({ cents, status }: { cents: number | null; status: TuningStatus | null }) {
@@ -14,7 +14,14 @@ export function BurbujaTono({ cents, status }: { cents: number | null; status: T
     <div className="burbuja-pista" role="img" aria-label="Indicador de afinación">
       <div className="burbuja-linea" />
       {cents !== null && status !== null && (
-        <div className="burbuja" style={{ top: `${y}%`, background: COLORS[status] }} />
+        <div
+          className="burbuja"
+          style={{
+            top: `${y}%`,
+            background: COLORS[status],
+            boxShadow: `0 0 18px ${COLORS[status]}`,
+          }}
+        />
       )}
     </div>
   );

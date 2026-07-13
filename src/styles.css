@@ -1,41 +1,176 @@
+/* ══════════════════════════════════════════════════════════════
+   Afinemos — Neon Tokyo (Electric Nightscape)
+   Base oscura #0a0a12 · acentos neón (máx. 2 por vista) ·
+   glow difuso 12-20px · Sora / Inter / Space Grotesk
+   ══════════════════════════════════════════════════════════════ */
+
 :root {
-  font-family: system-ui, sans-serif;
-  color-scheme: light dark;
+  --bg: #0a0a12;
+  --superficie: #12121e;
+  --superficie-alta: #181828;
+  --texto: #e9e7f2;
+  --texto-suave: rgba(233, 231, 242, 0.62);
+
+  --rosa: #ff2d78;
+  --cian: #00ffcc;
+  --amarillo: #ffe04a;
+
+  /* semánticos de afinación (neón sobre oscuro) */
+  --afinado: #3dffa0;
+  --cerca: #ffe04a;
+  --lejos: #ff4d5e;
+
+  --fuente-titulo: 'Sora', system-ui, sans-serif;
+  --fuente-cuerpo: 'Inter', system-ui, sans-serif;
+  --fuente-dato: 'Space Grotesk', monospace;
+
+  font-family: var(--fuente-cuerpo);
+  color-scheme: dark;
 }
+
 body {
   margin: 0;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
+  color: var(--texto);
+  background-color: var(--bg);
+  /* retícula tenue + spotlight, detalle de fondo del sistema */
+  background-image:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 45, 120, 0.08), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 50% 110%, rgba(0, 255, 204, 0.05), transparent 70%),
+    repeating-linear-gradient(0deg, transparent 0 39px, rgba(233, 231, 242, 0.025) 39px 40px),
+    repeating-linear-gradient(90deg, transparent 0 39px, rgba(233, 231, 242, 0.025) 39px 40px);
+  background-attachment: fixed;
 }
+
 #root {
-  width: min(28rem, 100vw);
-  padding: 1.5rem;
+  width: min(30rem, 100vw);
+  padding: 2rem 1.5rem 3rem;
   box-sizing: border-box;
   text-align: center;
 }
-button {
-  font-size: 1.1rem;
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.75rem;
-  border: 1px solid #888;
-  cursor: pointer;
+
+section {
+  animation: aparecer 420ms ease-out both;
 }
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Tipografía ── */
+
+h1 {
+  font-family: var(--fuente-titulo);
+  font-weight: 800;
+  font-size: 2.4rem;
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 1.25rem;
+  background: linear-gradient(100deg, var(--texto) 20%, var(--rosa) 60%, var(--cian) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+h2 {
+  font-family: var(--fuente-titulo);
+  font-weight: 700;
+  font-size: 1.4rem;
+  letter-spacing: -0.01em;
+  margin: 1rem 0 0.75rem;
+}
+
+p {
+  line-height: 1.55;
+}
+
+/* ── Botones: fondo oscuro, borde neón, glow al interactuar ── */
+
+button {
+  font-family: var(--fuente-dato);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--texto);
+  padding: 0.8rem 1.3rem;
+  border-radius: 0.75rem;
+  background: var(--superficie);
+  border: 1px solid rgba(255, 45, 120, 0.5);
+  cursor: pointer;
+  transition:
+    box-shadow 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+}
+
+button:hover,
+button:focus-visible {
+  border-color: var(--rosa);
+  box-shadow:
+    0 0 16px rgba(255, 45, 120, 0.4),
+    inset 0 0 12px rgba(255, 45, 120, 0.1);
+  transform: scale(1.02);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--cian);
+  outline-offset: 2px;
+}
+
+.enlace,
+.enlace:hover,
+.enlace:focus-visible {
+  background: none;
+  border: none;
+  box-shadow: none;
+  transform: none;
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.9rem;
+  text-transform: none;
+  letter-spacing: normal;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: var(--cian);
+  opacity: 0.75;
+}
+
+.enlace:hover {
+  opacity: 1;
+  text-shadow: 0 0 8px currentColor;
+}
+
+/* ── Burbuja de tono: carril neón ── */
+
 .burbuja-pista {
   position: relative;
   height: 16rem;
   width: 6rem;
-  margin: 1rem auto;
-  border: 1px solid #8884;
+  margin: 1.25rem auto;
+  border: 1px solid rgba(0, 255, 204, 0.35);
   border-radius: 3rem;
   overflow: hidden;
+  background: rgba(18, 18, 30, 0.6);
+  box-shadow: inset 0 0 14px rgba(0, 255, 204, 0.08);
 }
+
 .burbuja-linea {
   position: absolute;
   top: 50%;
   left: 0;
   right: 0;
-  border-top: 2px dashed #888;
+  border-top: 2px dashed rgba(0, 255, 204, 0.5);
 }
+
 .burbuja {
   position: absolute;
   left: 50%;
@@ -45,60 +180,142 @@ button {
   transform: translate(-50%, -50%);
   transition: top 80ms linear;
 }
+
+/* ── Datos y etiquetas ── */
+
+.objetivo {
+  font-family: var(--fuente-dato);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.9rem;
+  color: var(--texto-suave);
+}
+
+.objetivo strong {
+  font-size: 1.15rem;
+  color: var(--cian);
+  text-shadow: 0 0 8px currentColor;
+}
+
 .controles {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   justify-content: center;
-  margin: 1rem 0;
+  margin: 1.25rem 0;
 }
+
 .indicacion {
   font-size: 1.25rem;
+  font-weight: 500;
   min-height: 1.5em;
 }
-.enlace {
-  background: none;
-  border: none;
-  font-size: 0.9rem;
-  text-decoration: underline;
-  color: inherit;
-  opacity: 0.7;
+
+.notas-secundarias {
+  font-family: var(--fuente-dato);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.8rem;
+  color: var(--texto-suave);
 }
+
+.calificacion {
+  font-family: var(--fuente-titulo);
+  font-size: 4.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 0;
+  color: var(--cian);
+  text-shadow: 0 0 18px rgba(0, 255, 204, 0.45);
+}
+
+/* ── Tarjetas del menú ── */
+
 .tarjetas {
   display: grid;
   gap: 0.75rem;
-  margin: 1rem 0;
+  margin: 1.25rem 0;
 }
+
 .tarjeta {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.3rem;
   text-align: left;
+  padding: 1rem 1.1rem;
+  background: var(--superficie);
+  border: 1px solid rgba(0, 255, 204, 0.3);
+  border-radius: 1rem;
 }
-.tarjeta span {
-  font-size: 0.9rem;
-  opacity: 0.75;
+
+.tarjeta:hover,
+.tarjeta:focus-visible {
+  border-color: var(--cian);
+  box-shadow:
+    0 0 16px rgba(0, 255, 204, 0.3),
+    inset 0 0 12px rgba(0, 255, 204, 0.08);
 }
-.calificacion {
-  font-size: 4rem;
+
+.tarjeta strong {
+  font-family: var(--fuente-titulo);
+  font-size: 1.05rem;
   font-weight: 700;
-  margin: 0.5rem 0 0;
+  text-transform: none;
+  letter-spacing: normal;
 }
-.notas-secundarias {
-  font-size: 0.9rem;
-  opacity: 0.7;
+
+.tarjeta span {
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.88rem;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--texto-suave);
 }
+
+/* ── Historial ── */
+
 .historial {
   list-style: none;
   padding: 0;
   display: grid;
   gap: 0.5rem;
 }
+
 .historial li {
   display: flex;
   justify-content: space-between;
-  gap: 0.5rem;
-  border: 1px solid #8884;
-  border-radius: 0.5rem;
-  padding: 0.5rem 0.75rem;
-  font-size: 0.9rem;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--superficie);
+  border: 1px solid rgba(0, 255, 204, 0.25);
+  border-radius: 0.75rem;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.85rem;
+}
+
+.historial li span:first-child {
+  font-family: var(--fuente-dato);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--texto-suave);
+}
+
+.historial li strong {
+  font-family: var(--fuente-titulo);
+  font-size: 1.15rem;
+  color: var(--cian);
+  text-shadow: 0 0 8px rgba(0, 255, 204, 0.4);
+}
+
+/* ── Accesibilidad de movimiento ── */
+
+@media (prefers-reduced-motion: reduce) {
+  section {
+    animation: none;
+  }
+  button,
+  .burbuja {
+    transition: none;
+  }
 }
