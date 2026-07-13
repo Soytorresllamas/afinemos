@@ -4,6 +4,8 @@ Entrenador vocal personal: detecta tu rango, te da una nota objetivo y te
 muestra en tiempo real si estás afinado. 100 % local: nada sale de tu
 navegador.
 
+**Pruébala en línea:** https://soytorresllamas.github.io/afinemos/
+
 ## Uso
 
 ```bash
