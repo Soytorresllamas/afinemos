@@ -69,7 +69,7 @@ export function Afinador({
           )}
         </>
       )}
-      <ReglaNotas range={range} targetMidi={target} />
+      <ReglaNotas range={range} targetMidis={[target]} />
       <SelectorMic
         activo={activo}
         value={micId}

@@ -9,6 +9,7 @@ import type { VocalRange } from '../music/range';
 import { saveSession } from '../progress/store';
 import { CirculoTono } from './CirculoTono';
 import { PantallaErrorMic } from './PantallaErrorMic';
+import { ReglaNotas } from './ReglaNotas';
 import { usePitchStream } from './usePitchStream';
 
 const GATE = { minClarity: 0.85, minRms: 0.01 };
@@ -147,6 +148,13 @@ export function Ejercicio({
       ? centsOff(reading.midi, ejercicio.steps[pasoActivo].targetMidi)
       : null;
 
+  const resaltadas =
+    ejercicio.type === 'sirena'
+      ? [ejercicio.lowMidi, ejercicio.highMidi]
+      : fase === 'escucha' || fase === 'canta'
+        ? [ejercicio.steps[pasoActivo].targetMidi]
+        : [...new Set(ejercicio.steps.map((s) => s.targetMidi))];
+
   const secuencia =
     ejercicio.type === 'sirena' ? (
       <p className="notas-secundarias">
@@ -238,6 +246,7 @@ export function Ejercicio({
         ) : (
           <p className="indicacion">No te escuché bien 🤔 Acércate al micrófono e intenta de nuevo.</p>
         ))}
+      <ReglaNotas range={range} targetMidis={resaltadas} />
       {(fase === 'listo' || fase === 'resultado') && (
         <div className="controles">
           {fase === 'resultado' && <button onClick={empezar}>Repetir 🔁</button>}

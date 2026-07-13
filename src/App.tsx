@@ -40,6 +40,7 @@ export default function App() {
   if (vista === 'menu-ejercicios') {
     return (
       <Ejercicios
+        range={range}
         onElegir={(tipo) => setVista({ tipo })}
         onHistorial={() => setVista('historial')}
         onVolver={() => setVista('afinador')}

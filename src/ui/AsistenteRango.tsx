@@ -4,6 +4,7 @@ import { isValidRange, type VocalRange } from '../music/range';
 import { StableNoteDetector, type PitchReading } from '../music/stableNote';
 import { CirculoTono } from './CirculoTono';
 import { PantallaErrorMic } from './PantallaErrorMic';
+import { ReglaNotas } from './ReglaNotas';
 import { usePitchStream } from './usePitchStream';
 
 type Paso = 'inicio' | 'grave' | 'agudo' | 'listo';
@@ -68,6 +69,7 @@ export function AsistenteRango({ onComplete }: { onComplete(range: VocalRange): 
               Tu rango: {midiToNoteName(lowMidi!)} – {midiToNoteName(highMidi!)}
             </h2>
             <p>Todos los ejercicios usarán notas dentro de este rango.</p>
+            <ReglaNotas range={{ lowMidi: lowMidi!, highMidi: highMidi! }} />
             <button onClick={() => onComplete({ lowMidi: lowMidi!, highMidi: highMidi! })}>
               Guardar y empezar
             </button>

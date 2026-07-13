@@ -1,4 +1,6 @@
 import { EXERCISE_LABELS, type ExerciseType } from '../exercises/types';
+import type { VocalRange } from '../music/range';
+import { ReglaNotas } from './ReglaNotas';
 
 const DESCRIPCIONES: Record<ExerciseType, string> = {
   'nota-sostenida': 'Mantén una nota sin que tiemble',
@@ -10,10 +12,12 @@ const DESCRIPCIONES: Record<ExerciseType, string> = {
 const TIPOS: ExerciseType[] = ['nota-sostenida', 'escala-3', 'escala-5', 'sirena'];
 
 export function Ejercicios({
+  range,
   onElegir,
   onHistorial,
   onVolver,
 }: {
+  range: VocalRange;
   onElegir(type: ExerciseType): void;
   onHistorial(): void;
   onVolver(): void;
@@ -30,6 +34,7 @@ export function Ejercicios({
           </button>
         ))}
       </div>
+      <ReglaNotas range={range} />
       <div className="controles">
         <button onClick={onHistorial}>Mi historial 📈</button>
         <button className="enlace" onClick={onVolver}>
