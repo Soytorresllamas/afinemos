@@ -27,6 +27,7 @@ export function usePitchStream(active: boolean): {
           s.stop();
           return;
         }
+        setError(null);
         session = s;
         const analyze = createAnalyzer(BUFFER_SIZE, s.sampleRate);
         timer = window.setInterval(() => {
