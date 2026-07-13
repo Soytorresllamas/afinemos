@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import { preferredMicId, setPreferredMicId } from '../audio/mic';
 import { playNote } from '../audio/tones';
 import { centsOff, midiToNoteName, tuningStatus } from '../music/notes';
 import { randomTargetMidi, type VocalRange } from '../music/range';
 import { CirculoTono } from './CirculoTono';
 import { CONSEJOS_AGUDO, CONSEJOS_GENERALES, CONSEJOS_GRAVE } from './consejos';
 import { PantallaErrorMic } from './PantallaErrorMic';
+import { ReglaNotas } from './ReglaNotas';
+import { SelectorMic } from './SelectorMic';
 import { usePitchStream } from './usePitchStream';
 
 const MIN_RMS = 0.01;
@@ -21,7 +24,8 @@ export function Afinador({
 }) {
   const [target, setTarget] = useState(() => randomTargetMidi(range));
   const [activo, setActivo] = useState(false);
-  const { reading, error } = usePitchStream(activo);
+  const [micId, setMicId] = useState<string | null>(() => preferredMicId());
+  const { reading, error } = usePitchStream(activo, micId);
 
   if (error) return <PantallaErrorMic code={error.code} />;
 
@@ -65,6 +69,15 @@ export function Afinador({
           )}
         </>
       )}
+      <ReglaNotas range={range} targetMidi={target} />
+      <SelectorMic
+        activo={activo}
+        value={micId}
+        onChange={(id) => {
+          setPreferredMicId(id);
+          setMicId(id);
+        }}
+      />
       <details className="consejos">
         <summary>Consejos para modular mejor</summary>
         <ul>

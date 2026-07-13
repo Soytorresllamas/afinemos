@@ -6,7 +6,11 @@ import type { PitchReading } from '../music/stableNote';
 const BUFFER_SIZE = 2048;
 const INTERVAL_MS = 50;
 
-export function usePitchStream(active: boolean): {
+/** `deviceKey`: cambia su valor para reiniciar la captura (p. ej. al elegir otro micrófono). */
+export function usePitchStream(
+  active: boolean,
+  deviceKey: string | null = null,
+): {
   reading: PitchReading | null;
   error: MicError | null;
 } {
@@ -42,7 +46,7 @@ export function usePitchStream(active: boolean): {
       if (timer !== undefined) window.clearInterval(timer);
       session?.stop();
     };
-  }, [active]);
+  }, [active, deviceKey]);
 
   return { reading, error };
 }

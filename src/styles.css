@@ -237,6 +237,101 @@ button:focus-visible {
   font-weight: 600;
 }
 
+/* ── Regla de notas (agudo → grave) ── */
+
+.regla-marco {
+  margin: 1.5rem 0 0.5rem;
+}
+
+.regla-extremos {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--fuente-dato);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--texto-suave);
+  margin-bottom: 0.35rem;
+}
+
+.regla {
+  display: flex;
+  overflow-x: auto;
+  border: 1px solid rgba(0, 255, 204, 0.25);
+  border-radius: 0.75rem;
+  background: var(--superficie);
+  padding: 0.5rem 0.4rem 0.6rem;
+}
+
+.regla-nota {
+  flex: 1 1 0;
+  min-width: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.regla-marca {
+  display: block;
+  width: 2px;
+  height: 0.7rem;
+  background: rgba(233, 231, 242, 0.3);
+  border-radius: 1px;
+}
+
+.regla-etiqueta {
+  font-family: var(--fuente-dato);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--texto-suave);
+  writing-mode: vertical-rl;
+  text-transform: uppercase;
+}
+
+.regla-objetivo .regla-marca {
+  background: var(--rosa);
+  height: 1rem;
+  box-shadow: 0 0 8px var(--rosa);
+}
+
+.regla-objetivo .regla-etiqueta {
+  color: var(--rosa);
+  font-weight: 600;
+  text-shadow: 0 0 8px currentColor;
+}
+
+/* ── Selector de micrófono ── */
+
+.selector-mic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  margin: 0.75rem 0;
+  font-family: var(--fuente-dato);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--texto-suave);
+}
+
+.selector-mic select {
+  font-family: var(--fuente-cuerpo);
+  font-size: 0.85rem;
+  color: var(--texto);
+  background: var(--superficie);
+  border: 1px solid rgba(0, 255, 204, 0.35);
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  max-width: 14rem;
+}
+
+.selector-mic select:focus-visible {
+  outline: 2px solid var(--cian);
+  outline-offset: 2px;
+}
+
 /* ── Consejos ── */
 
 .consejo-contextual {

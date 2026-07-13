@@ -26,11 +26,51 @@ export interface MicSession {
   stop(): void;
 }
 
+const MIC_KEY = 'afinemos:mic-device';
+
+/** Micrófono preferido por el usuario (persistido en este navegador). */
+export function preferredMicId(): string | null {
+  try {
+    return localStorage.getItem(MIC_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function setPreferredMicId(id: string | null): void {
+  try {
+    if (id) localStorage.setItem(MIC_KEY, id);
+    else localStorage.removeItem(MIC_KEY);
+  } catch {
+    /* almacenamiento no disponible: la selección no persiste */
+  }
+}
+
+export interface MicDevice {
+  deviceId: string;
+  label: string;
+}
+
+/** Entradas de audio disponibles (los nombres aparecen tras conceder permiso). */
+export async function listMics(): Promise<MicDevice[]> {
+  const devices = await navigator.mediaDevices.enumerateDevices();
+  return devices
+    .filter((d) => d.kind === 'audioinput' && d.deviceId !== '')
+    .map((d, i) => ({ deviceId: d.deviceId, label: d.label || `Micrófono ${i + 1}` }));
+}
+
 export async function startMic(bufferSize = 2048): Promise<MicSession> {
   let stream: MediaStream;
+  const preferido = preferredMicId();
   try {
     stream = await navigator.mediaDevices.getUserMedia({
-      audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false },
+      audio: {
+        echoCancellation: false,
+        noiseSuppression: false,
+        autoGainControl: false,
+        // `ideal`: si el dispositivo elegido ya no existe, cae al predeterminado.
+        ...(preferido ? { deviceId: { ideal: preferido } } : {}),
+      },
     });
   } catch (err) {
     throw toMicError(err);
