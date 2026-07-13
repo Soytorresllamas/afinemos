@@ -32,6 +32,7 @@ describe('generateExercise', () => {
     const angosto: VocalRange = { lowMidi: 60, highMidi: 65 };
     const e = generateExercise('escala-5', angosto, () => 0);
     if (e.type === 'sirena') throw new Error('tipo inesperado');
+    expect(e.type).toBe('escala-3');
     expect(e.steps.map((s) => s.targetMidi)).toEqual([60, 62, 64, 62, 60]);
   });
 

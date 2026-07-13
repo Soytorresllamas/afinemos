@@ -40,7 +40,9 @@ function scaleExercise(
   rng: () => number,
 ): HeldExercise {
   // Si la escala no cabe en el rango, degradar a la de 3 (span 4 siempre cabe: rango mínimo 5).
-  const iv = range.highMidi - range.lowMidi < intervals[intervals.length - 1] ? SCALE_3 : intervals;
+  const degraded = range.highMidi - range.lowMidi < intervals[intervals.length - 1];
+  const iv = degraded ? SCALE_3 : intervals;
+  const resultType: HeldExercise['type'] = degraded && type === 'escala-5' ? 'escala-3' : type;
   const span = iv[iv.length - 1];
   const maxStart = range.highMidi - span;
   const start = range.lowMidi + Math.floor(rng() * (maxStart - range.lowMidi + 1));
@@ -50,5 +52,5 @@ function scaleExercise(
     targetMidi: m,
     durationMs: SCALE_NOTE_MS,
   }));
-  return { type, steps };
+  return { type: resultType, steps };
 }
