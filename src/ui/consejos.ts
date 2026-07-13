@@ -23,6 +23,13 @@ export const CONSEJOS_AGUDO: string[] = [
   'Suelta la lengua: que descanse detrás de los dientes de abajo, sin retraerla.',
 ];
 
+/** Consejo según el promedio de desviación: negativo = grave (subir), positivo = agudo (bajar).
+ *  `semilla` fija cuál consejo de la lista se muestra (estable, no parpadea). */
+export function consejoPara(promedioCents: number, semilla: number): string {
+  const lista = promedioCents < 0 ? CONSEJOS_GRAVE : CONSEJOS_AGUDO;
+  return lista[Math.abs(Math.round(semilla)) % lista.length];
+}
+
 /** Técnica general para modular mejor (sección expandible). */
 export const CONSEJOS_GENERALES: string[] = [
   'Respiración diafragmática: al inhalar crece el estómago, no el pecho. Pon una mano en la panza para comprobarlo.',

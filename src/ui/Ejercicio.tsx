@@ -8,6 +8,7 @@ import { centsOff, midiToNoteName, tuningStatus } from '../music/notes';
 import type { VocalRange } from '../music/range';
 import { saveSession } from '../progress/store';
 import { CirculoTono } from './CirculoTono';
+import { consejoPara } from './consejos';
 import { PantallaErrorMic } from './PantallaErrorMic';
 import { ReglaNotas } from './ReglaNotas';
 import { usePitchStream } from './usePitchStream';
@@ -21,6 +22,8 @@ type Fase = 'listo' | 'escucha' | 'canta' | 'resultado';
 interface Resultado {
   total: number;
   detalle: string;
+  /** Desviación promedio en cents (negativa = grave); null si no aplica (sirena). */
+  sesgo: number | null;
 }
 
 function totalMsDe(e: Exercise): number {
@@ -30,12 +33,19 @@ function totalMsDe(e: Exercise): number {
 function calificar(e: Exercise, lecturas: TimedReading[]): Resultado | null {
   if (e.type === 'sirena') {
     const g = gradeSiren(validMidis(lecturas, GATE), e.lowMidi, e.highMidi);
-    return g && { total: g.total, detalle: `Cubriste el ${g.cobertura}% del recorrido` };
+    return g && { total: g.total, detalle: `Cubriste el ${g.cobertura}% del recorrido`, sesgo: null };
   }
   const buckets = bucketReadings(e.steps, lecturas, GATE);
   const cents = buckets.map((midis, i) => midis.map((m) => centsOff(m, e.steps[i].targetMidi)));
   const g = gradeHeldExercise(cents);
-  return g && { total: g.total, detalle: `Precisión ${g.precision} · Estabilidad ${g.estabilidad}` };
+  if (g === null) return null;
+  const todos = cents.flat();
+  const sesgo = todos.length > 0 ? todos.reduce((a, b) => a + b, 0) / todos.length : null;
+  return {
+    total: g.total,
+    detalle: `Precisión ${g.precision} · Estabilidad ${g.estabilidad}`,
+    sesgo,
+  };
 }
 
 function mensaje(total: number): string {
@@ -242,6 +252,18 @@ export function Ejercicio({
             <p className="calificacion">{resultado.total}</p>
             <p className="indicacion">{mensaje(resultado.total)}</p>
             <p className="notas-secundarias">{resultado.detalle}</p>
+            {resultado.sesgo !== null && Math.abs(resultado.sesgo) > 25 && (
+              <p className="consejo-contextual">
+                💡{' '}
+                {resultado.sesgo < 0
+                  ? 'En promedio quedaste grave (sube). '
+                  : 'En promedio quedaste agudo (baja). '}
+                {consejoPara(
+                  resultado.sesgo,
+                  ejercicio.type === 'sirena' ? 0 : ejercicio.steps[0].targetMidi,
+                )}
+              </p>
+            )}
           </>
         ) : (
           <p className="indicacion">No te escuché bien 🤔 Acércate al micrófono e intenta de nuevo.</p>

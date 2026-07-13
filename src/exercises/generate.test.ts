@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { VocalRange } from '../music/range';
-import { generateExercise, HELD_NOTE_MS, SIREN_MS } from './generate';
+import { generateExercise, HELD_NOTE_MS, SCALE_NOTE_MS, SIREN_MS } from './generate';
 
 const rango: VocalRange = { lowMidi: 48, highMidi: 60 };
 
@@ -15,7 +15,7 @@ describe('generateExercise', () => {
     const e = generateExercise('escala-3', rango, () => 0);
     if (e.type === 'sirena') throw new Error('tipo inesperado');
     expect(e.steps.map((s) => s.targetMidi)).toEqual([48, 50, 52, 50, 48]);
-    expect(e.steps.every((s) => s.durationMs === 1000)).toBe(true);
+    expect(e.steps.every((s) => s.durationMs === SCALE_NOTE_MS)).toBe(true);
   });
 
   it('escala de 5: intervalos mayores y dentro del rango', () => {

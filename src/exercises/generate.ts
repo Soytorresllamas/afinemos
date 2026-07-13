@@ -1,9 +1,9 @@
 import { randomTargetMidi, type VocalRange } from '../music/range';
 import type { Exercise, ExerciseType, HeldExercise, HeldStep } from './types';
 
-export const HELD_NOTE_MS = 3000;
-export const SCALE_NOTE_MS = 1000;
-export const SIREN_MS = 6000;
+export const HELD_NOTE_MS = 5000;
+export const SCALE_NOTE_MS = 1500;
+export const SIREN_MS = 10000;
 
 const SCALE_3 = [0, 2, 4]; // do-re-mi (mayor)
 const SCALE_5 = [0, 2, 4, 5, 7]; // do-re-mi-fa-sol (mayor)

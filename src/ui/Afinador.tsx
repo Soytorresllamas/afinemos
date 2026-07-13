@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { preferredMicId, setPreferredMicId } from '../audio/mic';
 import { playNote } from '../audio/tones';
 import { centsOff, midiToNoteName, tuningStatus } from '../music/notes';
 import { randomTargetMidi, type VocalRange } from '../music/range';
 import { CirculoTono } from './CirculoTono';
-import { CONSEJOS_AGUDO, CONSEJOS_GENERALES, CONSEJOS_GRAVE } from './consejos';
+import { CONSEJOS_GENERALES, consejoPara } from './consejos';
 import { PantallaErrorMic } from './PantallaErrorMic';
 import { ReglaNotas } from './ReglaNotas';
 import { SelectorMic } from './SelectorMic';
@@ -32,6 +32,20 @@ export function Afinador({
   const valido = reading !== null && reading.rms >= MIN_RMS && reading.clarity >= MIN_CLARITY;
   const cents = valido ? centsOff(reading.midi, target) : null;
   const status = cents !== null ? tuningStatus(cents) : null;
+
+  // Promedio de desviación con esta nota objetivo: el consejo se basa en la
+  // tendencia («en promedio vas grave/agudo»), no en la lectura del instante.
+  const media = useRef({ n: 0, sum: 0 });
+  useEffect(() => {
+    media.current = { n: 0, sum: 0 };
+  }, [target, activo]);
+  useEffect(() => {
+    if (reading === null) return;
+    if (reading.rms < MIN_RMS || reading.clarity < MIN_CLARITY) return;
+    media.current.n += 1;
+    media.current.sum += centsOff(reading.midi, target);
+  }, [reading, target]);
+  const promedio = media.current.n >= 10 ? media.current.sum / media.current.n : null;
 
   return (
     <section>
@@ -64,8 +78,11 @@ export function Afinador({
           <p className="indicacion" aria-live="polite">
             {indicacion(cents)}
           </p>
-          {cents !== null && Math.abs(cents) > 25 && (
-            <Consejo cents={cents} target={target} />
+          {promedio !== null && Math.abs(promedio) > 25 && (
+            <p className="consejo-contextual">
+              💡 {promedio < 0 ? 'En promedio vas grave (sube). ' : 'En promedio vas agudo (baja). '}
+              {consejoPara(promedio, target)}
+            </p>
           )}
         </>
       )}
@@ -102,9 +119,3 @@ function indicacion(cents: number | null): string {
   return '¡Afinado! 🎉';
 }
 
-/** Un consejo contextual estable por nota objetivo (no parpadea entre lecturas). */
-function Consejo({ cents, target }: { cents: number; target: number }) {
-  const lista = cents < 0 ? CONSEJOS_GRAVE : CONSEJOS_AGUDO;
-  const consejo = lista[target % lista.length];
-  return <p className="consejo-contextual">💡 {consejo}</p>;
-}
