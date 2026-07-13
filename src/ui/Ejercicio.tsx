@@ -65,19 +65,14 @@ export function Ejercicio({
     lecturas.current.push({ ...reading, timeMs: performance.now() - inicioCanto.current });
   }, [fase, reading]);
 
-  // Fase escucha: tocar el ejemplo y pasar a cantar.
+  // Fase escucha: calcular duración y pasar a cantar tras finalizar la reproducción.
   useEffect(() => {
     if (fase !== 'escucha') return;
     let listenMs: number;
     if (ejercicio.type === 'sirena') {
       listenMs = ejercicio.durationMs;
-      void playSiren(ejercicio.lowMidi, ejercicio.highMidi, ejercicio.durationMs / 1000);
     } else {
       listenMs = ejercicio.steps.length * LISTEN_NOTE_S * 1000;
-      void playNotes(
-        ejercicio.steps.map((s) => s.targetMidi),
-        LISTEN_NOTE_S,
-      );
     }
     const t = window.setTimeout(() => {
       lecturas.current = [];
@@ -112,8 +107,20 @@ export function Ejercicio({
       ? `${midiToNoteName(ejercicio.lowMidi)} → ${midiToNoteName(ejercicio.highMidi)} → ${midiToNoteName(ejercicio.lowMidi)}`
       : ejercicio.steps.map((s) => midiToNoteName(s.targetMidi)).join(' · ');
 
+  const reproducir = () => {
+    if (ejercicio.type === 'sirena') {
+      void playSiren(ejercicio.lowMidi, ejercicio.highMidi, ejercicio.durationMs / 1000);
+    } else {
+      void playNotes(
+        ejercicio.steps.map((s) => s.targetMidi),
+        LISTEN_NOTE_S,
+      );
+    }
+  };
+
   const empezar = () => {
     setResultado(null);
+    reproducir();
     setFase('escucha');
   };
 
