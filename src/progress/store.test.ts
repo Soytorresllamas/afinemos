@@ -1,5 +1,6 @@
 import 'fake-indexeddb/auto';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, afterEach } from 'vitest';
+import { del } from 'idb-keyval';
 import { clearVocalRange, loadVocalRange, saveVocalRange, listSessions, saveSession } from './store';
 
 describe('store', () => {
@@ -16,6 +17,8 @@ describe('store', () => {
 });
 
 describe('sessions', () => {
+  afterEach(() => del('afinemos:sessions'));
+
   it('lista vacía sin sesiones', async () => {
     expect(await listSessions()).toEqual([]);
   });
