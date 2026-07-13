@@ -216,6 +216,27 @@ button:focus-visible {
   }
 }
 
+/* ── Secuencia de notas del ejercicio ── */
+
+.secuencia {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.secuencia span {
+  transition:
+    color 150ms ease,
+    text-shadow 150ms ease;
+}
+
+.secuencia .nota-activa {
+  color: var(--cian);
+  text-shadow: 0 0 8px currentColor;
+  font-weight: 600;
+}
+
 /* ── Consejos ── */
 
 .consejo-contextual {

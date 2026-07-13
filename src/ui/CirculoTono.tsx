@@ -1,10 +1,11 @@
 import type { TuningStatus } from '../music/notes';
 
-export type EstadoCirculo = 'esperando' | 'escuchando' | TuningStatus;
+export type EstadoCirculo = 'esperando' | 'escuchando' | 'reproduciendo' | TuningStatus;
 
 const COLORS: Record<EstadoCirculo, string> = {
   esperando: 'rgba(233, 231, 242, 0.35)',
   escuchando: '#00ffcc',
+  reproduciendo: '#00ffcc',
   afinado: '#3dffa0',
   cerca: '#ffe04a',
   lejos: '#ff4d5e',
@@ -13,6 +14,7 @@ const COLORS: Record<EstadoCirculo, string> = {
 const ICONOS: Record<EstadoCirculo, string> = {
   esperando: '🎤',
   escuchando: '🎶',
+  reproduciendo: '🔊',
   afinado: '✓',
   cerca: '~',
   lejos: '!',
@@ -21,6 +23,7 @@ const ICONOS: Record<EstadoCirculo, string> = {
 const ETIQUETAS: Record<EstadoCirculo, string> = {
   esperando: 'esperando tu voz',
   escuchando: 'te escucho',
+  reproduciendo: 'escucha con atención',
   afinado: 'afinado',
   cerca: 'cerca',
   lejos: 'lejos',
@@ -37,7 +40,8 @@ export function CirculoTono({
   nota?: string | null;
 }) {
   const color = COLORS[estado];
-  const conTono = estado !== 'esperando' && estado !== 'escuchando';
+  const conTono =
+    estado !== 'esperando' && estado !== 'escuchando' && estado !== 'reproduciendo';
   const principal = conTono
     ? cents !== null && cents < -25
       ? '↑'
